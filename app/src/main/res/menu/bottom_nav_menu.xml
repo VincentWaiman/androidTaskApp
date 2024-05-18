@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Normal"
+        android:icon="@drawable/ic_normal"
+        />
+    <item
+        android:title="Urgent"
+        android:icon="@drawable/ic_urgent"
+        />
+    <item
+        android:title="Important"
+        android:icon="@drawable/ic_important"
+        />
+</menu>
