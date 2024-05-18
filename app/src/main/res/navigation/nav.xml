@@ -31,4 +31,9 @@
             android:id="@+id/action_newTaskFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/taskDetailsFragment"
+        android:name="com.example.androidtaskapp.TaskDetailsFragment"
+        android:label="fragment_task_details"
+        tools:layout="@layout/fragment_task_details" />
 </navigation>
