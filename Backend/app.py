@@ -21,12 +21,12 @@ class Task(db.Model):
 def create_app():
     
     app = Flask(__name__)
-    
     database = "taskapp"
 
     # if using docker
     app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://root:root@db/{database}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    
     
     engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
     
