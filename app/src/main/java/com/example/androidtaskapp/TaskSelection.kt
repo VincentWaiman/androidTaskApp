@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
  * A simple [Fragment] subclass.
@@ -28,6 +30,37 @@ class TaskSelection : Fragment() {
         val adapter = TasksRecyclerViewAdapter(tasksExampleModels)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter.setOnItemClickListener(object : TasksRecyclerViewAdapter.onItemClickListener {
+            override fun onItemClick(position: Int) {
+                context?.let {
+                    Toast.makeText(it, "You clicked on item No. $position", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.normalButton -> {
+                    // Handle Normal button click
+                    Toast.makeText(requireContext(), "Normal selected", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.urgentButton -> {
+                    // Handle Urgent button click
+                    Toast.makeText(requireContext(), "Urgent selected", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.importantButton -> {
+                    // Handle Important button click
+                    Toast.makeText(requireContext(), "Important selected", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+
+
 
         return view
     }
