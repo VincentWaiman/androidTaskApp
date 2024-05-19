@@ -1,5 +1,6 @@
 package com.example.androidtaskapp
 
+import TaskViewModel
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.androidtaskapp.ApiClient.taskApiService
 import retrofit2.Call
@@ -25,6 +27,8 @@ import java.util.Locale
  * create an instance of this fragment.
  */
 class NewTaskFragment : Fragment() {
+
+    private val taskViewModel: TaskViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,28 +46,6 @@ class NewTaskFragment : Fragment() {
         taskCategory.setAdapter(arrayAdapter)
 
         addTaskButton.setOnClickListener {
-            val title = view.findViewById<EditText>(R.id.editTextTitle).text.toString()
-            val description = view.findViewById<EditText>(R.id.editTextDescription).text.toString()
-            val category = taskCategory.text.toString()
-
-            val createdTime = System.currentTimeMillis()
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val dateString = dateFormat.format(createdTime)
-
-            val task = TaskInfo(
-                title = title,
-                description = description,
-                status = "0",
-                category = when (category) {
-                    "New" -> "0"
-                    "Urgent" -> "1"
-                    "Important" -> "2"
-                    else -> "0"
-                },
-                createdTime = dateString
-            )
-            addTask(task)
-
             // ask for a nav controller
             val navController = view.findNavController()
             // navigate into certain destination
@@ -73,11 +55,26 @@ class NewTaskFragment : Fragment() {
                 // Show a Toast message if any field is empty
                 Toast.makeText(requireContext(), "Please fill all fields to add a task", Toast.LENGTH_SHORT).show()
             } else {
-                // Put your add task function here
-                // For example, save the task to your database or list
+                val category = taskCategory.text.toString()
 
-                // Navigate back to the main fragment
-                val navController = view.findNavController()
+                val createdTime = System.currentTimeMillis()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val dateString = dateFormat.format(createdTime)
+
+                val task = TaskInfo(
+                    title = taskTitle.text.toString(),
+                    description = taskDescription.text.toString(),
+                    status = "0",
+                    category = when (category) {
+                        "New" -> "0"
+                        "Urgent" -> "1"
+                        "Important" -> "2"
+                        else -> "0"
+                    },
+                    createdTime = dateString
+                )
+                addTask(task)
+                view.findNavController()
             }
         }
 
@@ -102,11 +99,11 @@ class NewTaskFragment : Fragment() {
                 if (response.isSuccessful) {
                     val addedTask = response.body()
                     Log.e("NewTaskFragment", "Task added successfully \n $addedTask")
+                    taskViewModel.getTasks()
                 } else {
                     Log.e("NewTaskFragment", "Failed to add task \n ${response.errorBody()?.string() ?: ""}")
                 }
             }
         })
     }
-}
 }
