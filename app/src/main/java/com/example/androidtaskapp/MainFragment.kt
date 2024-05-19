@@ -30,8 +30,9 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getTasks()
+        taskViewModel.getTasks()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,16 +41,19 @@ class MainFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         val goToTasks = view.findViewById<Button>(R.id.goToTasksButton)
-        val addTask = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.addTaskButton)
+        val addTask =
+            view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(
+                R.id.addTaskButton
+            )
 
-        goToTasks.setOnClickListener{
+        goToTasks.setOnClickListener {
             // ask for a nav controller
             val navController = view.findNavController()
             // navigate into certain destination
             navController.navigate(R.id.action_mainFragment_to_taskSelection)
         }
 
-        addTask.setOnClickListener{
+        addTask.setOnClickListener {
             // ask for a nav controller
             val navController = view.findNavController()
             // navigate into certain destination
@@ -79,32 +83,5 @@ class MainFragment : Fragment() {
         })
 
         return view
-    }
-
-    private fun getTasks() {
-        val call = taskApiService.getTasks()
-
-        call.enqueue(object : Callback<TaskResponse> {
-            override fun onFailure(call: Call<TaskResponse>, t: Throwable) {
-                Log.e("MainActivity", "Failed to get search results", t)
-            }
-
-            override fun onResponse(
-                call: Call<TaskResponse>,
-                response: Response<TaskResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val taskList = response.body()?.task
-
-                    // Store the retrieved tasks in the ViewModel
-                    if (taskList != null) {
-                        taskViewModel.setTasks(taskList)
-                    }
-                    Log.e("MainActivity", "Response Successful")
-                } else {
-                    Log.e("MainActivity", "Failed to get results \n ${response.errorBody()?.toString() ?: ""}")
-                }
-            }
-        })
     }
 }

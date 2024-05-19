@@ -2,9 +2,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.androidtaskapp.ApiClient.taskApiService
 import com.example.androidtaskapp.TaskInfo
+import com.example.androidtaskapp.TaskResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class TaskViewModel : ViewModel() {
+
     private val _tasks = MutableLiveData<List<TaskInfo>>()
     val tasks: LiveData<List<TaskInfo>> get() = _tasks
 
@@ -20,6 +26,25 @@ class TaskViewModel : ViewModel() {
     fun setTasks(taskList: List<TaskInfo>) {
         _tasks.value = taskList
         updateStatusCounts(taskList)
+    }
+
+    fun getTasks() {
+        val call = taskApiService.getTasks()
+
+        call.enqueue(object : Callback<TaskResponse> {
+            override fun onFailure(call: Call<TaskResponse>, t: Throwable) {
+                Log.e("TaskViewModel", "Failed to get tasks", t)
+            }
+
+            override fun onResponse(call: Call<TaskResponse>, response: Response<TaskResponse>) {
+                if (response.isSuccessful) {
+                    val taskList = response.body()?.task ?: emptyList()
+                    setTasks(taskList)
+                } else {
+                    Log.e("TaskViewModel", "Failed to get tasks \n ${response.errorBody()?.string() ?: ""}")
+                }
+            }
+        })
     }
 
     private fun updateStatusCounts(taskList: List<TaskInfo>) {
