@@ -1,5 +1,7 @@
 package com.example.androidtaskapp
 
+import TaskViewModel
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,7 +20,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  * create an instance of this fragment.
  */
 class TaskSelection : Fragment() {
-    val tasksExampleModels = ArrayList<TasksExample>()
+
+    private val allTasksExampleModels = ArrayList<TasksExample>()
+    private val tasksExampleModels = ArrayList<TasksExample>()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: TasksRecyclerViewAdapter
+
+    private val taskViewModel: TaskViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,9 +34,8 @@ class TaskSelection : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_task_selection, container, false)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        setUpTasksModels()
-        val adapter = TasksRecyclerViewAdapter(tasksExampleModels)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        adapter = TasksRecyclerViewAdapter(tasksExampleModels)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter.setOnItemClickListener(object : TasksRecyclerViewAdapter.onItemClickListener {
@@ -42,37 +50,52 @@ class TaskSelection : Fragment() {
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.normalButton -> {
-                    // Handle Normal button click
-                    Toast.makeText(requireContext(), "Normal selected", Toast.LENGTH_SHORT).show()
+                    filterTasksByCategory("0")
                     true
                 }
                 R.id.urgentButton -> {
-                    // Handle Urgent button click
-                    Toast.makeText(requireContext(), "Urgent selected", Toast.LENGTH_SHORT).show()
+                    filterTasksByCategory("1")
                     true
                 }
                 R.id.importantButton -> {
-                    // Handle Important button click
-                    Toast.makeText(requireContext(), "Important selected", Toast.LENGTH_SHORT).show()
+                    filterTasksByCategory("2")
                     true
                 }
                 else -> false
             }
         }
 
+        // Observe the tasks LiveData
+        taskViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
+            // Update the RecyclerView with the new task list
+            val updatedTasks = taskList.map { taskInfo ->
+                TasksExample(taskInfo.title, taskInfo.description, taskInfo.category)
+            }
+            allTasksExampleModels.clear()
+            allTasksExampleModels.addAll(updatedTasks)
+            filterTasksByCategory("0")
+        }
+
+        // Load tasks from ViewModel
+        taskViewModel.getTasks()
 
 
         return view
     }
-    private fun setUpTasksModels() {
-        var taskTitles = resources.getStringArray(R.array.taskTitlesExamples)
-        var taskDescs = resources.getStringArray(R.array.taskDescExamples)
-
-        for (i in taskTitles.indices) {
-            tasksExampleModels.add(TasksExample(taskTitles[i], taskDescs[i]))
+    private fun filterTasksByCategory(category: String) {
+        val filteredTasks = if (category == "All") {
+            allTasksExampleModels
+        } else {
+            allTasksExampleModels.filter { it.category == category }
         }
-        Log.d("TaskSelection", "Number of tasks: ${tasksExampleModels.size}")
+        updateRecyclerView(filteredTasks)
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateRecyclerView(filteredTasks: List<TasksExample>) {
+        tasksExampleModels.clear()
+        tasksExampleModels.addAll(filteredTasks)
+        adapter.notifyDataSetChanged()
     }
 
 }
