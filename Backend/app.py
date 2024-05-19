@@ -11,8 +11,8 @@ class Task(db.Model):
     description = db.Column(db.String(200))
     category = db.Column(db.String(50))
     status = db.Column(db.String(20))
-    created_time = db.Column(db.String(30))
-    finished_time = db.Column(db.String(30))
+    createdTime = db.Column(db.String(30))
+    finishedTime = db.Column(db.String(30))
     duration = db.Column(db.Integer) 
 
     def __repr__(self):
@@ -58,14 +58,14 @@ def add_new_task():
         description = data.get('description')
         status = data.get('status')
         category = data.get('category')
-        created_time = data.get('created_time')
+        createdTime = data.get('createdTime')
         
         new_task = Task(
             title = title,
             description = description,
             category = category,
             status = status,
-            created_time = created_time
+            createdTime = createdTime
         )
         
         db.session.add(new_task)
@@ -89,8 +89,8 @@ def get_all_task():
                 'description': item.description,
                 'status': item.status,
                 'category': item.category,
-                'created_time': item.created_time,
-                'finished_time': item.finished_time,
+                'createdTime': item.createdTime,
+                'finishedTime': item.finishedTime,
                 'duration': item.duration
             })
         return jsonify({'task': all_task_list})

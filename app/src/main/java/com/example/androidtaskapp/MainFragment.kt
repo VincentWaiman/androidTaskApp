@@ -11,8 +11,8 @@ import androidx.navigation.findNavController
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+
+import com.example.androidtaskapp.ApiClient.taskApiService
 
 /**
  * A simple [Fragment] subclass.
@@ -20,19 +20,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
-
-    private lateinit var retrofit: Retrofit
-
-    private lateinit var taskApiService: TaskApiService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        this.retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        this.taskApiService = this.retrofit.create(TaskApiService::class.java)
 
         getTasks()
     }
