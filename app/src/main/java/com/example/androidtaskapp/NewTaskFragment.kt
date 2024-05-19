@@ -1,6 +1,7 @@
 package com.example.androidtaskapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.EditText
 import androidx.navigation.findNavController
 
 /**
@@ -24,23 +26,34 @@ class NewTaskFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_new_task, container, false)
 
         val taskCategory = view.findViewById<AutoCompleteTextView>(R.id.taskCategory)
+        val taskTitle = view.findViewById<EditText>(R.id.editTextTitle)
+        val taskDescription = view.findViewById<EditText>(R.id.editTextDescription)
         val addTaskButton = view.findViewById<Button>(R.id.addTaskButton)
         val backToMainButton = view.findViewById<Button>(R.id.cancelButton)
-        val category= resources.getStringArray(R.array.categoryTypes)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_menu, category)
+        val category = resources.getStringArray(R.array.categoryTypes)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu, category)
         taskCategory.setAdapter(arrayAdapter)
 
         addTaskButton.setOnClickListener {
-//            put function here
+            // Check if any field is empty
+            if (taskTitle.text.isEmpty() || taskDescription.text.isEmpty() || taskCategory.text.isEmpty()) {
+                // Show a Toast message if any field is empty
+                Toast.makeText(requireContext(), "Please fill all fields to add a task", Toast.LENGTH_SHORT).show()
+            } else {
+                // Put your add task function here
+                // For example, save the task to your database or list
+
+                // Navigate back to the main fragment
+                val navController = view.findNavController()
+            }
         }
 
         backToMainButton.setOnClickListener {
-            // ask for a nav controller
+            // Ask for a nav controller
             val navController = view.findNavController()
-            // navigate into certain destination
+            // Navigate to the main fragment
             navController.navigate(R.id.action_newTaskFragment_to_mainFragment)
         }
         return view
     }
-
 }
