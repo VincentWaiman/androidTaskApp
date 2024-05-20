@@ -19,77 +19,77 @@
             android:padding="16dp">
 
             <!-- Title -->
-            <TextView
+            <EditText
                 android:id="@+id/textTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:hint="Title"
                 android:textSize="32sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Description -->
-            <TextView
+            <EditText
                 android:id="@+id/textDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:hint="Description"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textTitle" />
 
             <!-- Category -->
-            <TextView
+            <EditText
                 android:id="@+id/textCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Category"
+                android:hint="Category"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textDescription" />
 
             <!-- Status -->
-            <TextView
+            <EditText
                 android:id="@+id/textStatus"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Status"
+                android:hint="Status"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textCategory" />
 
             <!-- Created Time -->
-            <TextView
+            <EditText
                 android:id="@+id/textCreatedTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Created Time"
+                android:hint="Created Time"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textStatus" />
 
             <!-- Finished Time -->
-            <TextView
+            <EditText
                 android:id="@+id/textFinishedTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Finished Time"
+                android:hint="Finished Time"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textCreatedTime" />
 
             <!-- Duration -->
-            <TextView
+            <EditText
                 android:id="@+id/textDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Duration"
+                android:hint="Duration"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -109,14 +109,14 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="16dp" />
     <!-- Start Button -->
-<!--    <Button-->
-<!--        android:id="@+id/btnStart"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Start"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:layout_marginBottom="16dp" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btnStart"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Start"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:layout_marginBottom="16dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
