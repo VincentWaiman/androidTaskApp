@@ -98,25 +98,23 @@ def get_all_task():
         return jsonify({'error': str(e)}), 500 
                 
 @app.route('/api/edit-task/<int:id>', methods=['PUT'])
-def edit_task(id):
+def edit_task_status(id):
     try:
         task = Task.query.get(id)
         if not task:
-            return jsonify({'message': 'Item not found!'}), 404
+            return jsonify({'message': 'Task not found!'}), 404
 
-        
-        task_data = request.json
-        fields = ['title', 'description', 'status', 'category']
-        for field in fields:
-            if field in task_data:
-                setattr(task, field, task_data[field])
-            
+        new_status = request.json.get('status')
+        if new_status is None:
+            return jsonify({'message': 'Status field is required!'}), 400
+
+        task.status = new_status
         db.session.commit()
-        
-        return jsonify({'message': 'Task updated successfully!'})
+
+        return jsonify({'message': 'Task status updated successfully!'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.androidtaskapp.ApiClient.taskApiService
 import com.example.androidtaskapp.TaskInfo
 import com.example.androidtaskapp.TaskResponse
+import com.example.androidtaskapp.TaskStatusUpdate
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +23,6 @@ class TaskViewModel : ViewModel() {
 
     private val _statusTwoCount = MutableLiveData<Int>()
     val statusTwoCount: LiveData<Int> get() = _statusTwoCount
-
     fun setTasks(taskList: List<TaskInfo>) {
         _tasks.value = taskList
         updateStatusCounts(taskList)
@@ -57,5 +57,26 @@ class TaskViewModel : ViewModel() {
         _statusTwoCount.value = statusTwo
 
         Log.d("TaskViewModel", "Status counts updated - 0: $statusZero, 1: $statusOne, 2: $statusTwo")
+    }
+
+    fun updateTaskStatus(taskId: Int, newStatus: String) {
+        val statusUpdate = TaskStatusUpdate(newStatus)
+        val call = taskApiService.updateTaskStatus(taskId, statusUpdate)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("TaskViewModel", "Failed to update task status", t)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // Refresh tasks after successful update
+                    getTasks()
+                    Log.d("TaskViewModel", "Task status updated successfully")
+                } else {
+                    Log.e("TaskViewModel", "Failed to update task status \n ${response.errorBody()?.string() ?: ""}")
+                }
+            }
+        })
     }
 }

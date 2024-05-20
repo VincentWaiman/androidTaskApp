@@ -1,5 +1,7 @@
 package com.example.androidtaskapp
 
+import java.io.Serializable
+
 data class TaskInfo(
     val id: Int? = null,
     val title: String,
