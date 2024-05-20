@@ -21,7 +21,12 @@
         android:id="@+id/taskSelection"
         android:name="com.example.androidtaskapp.TaskSelection"
         android:label="fragment_task_selection"
-        tools:layout="@layout/fragment_task_selection" />
+        tools:layout="@layout/fragment_task_selection" >
+        <action
+            android:id="@+id/action_taskSelection_to_taskDetailsFragment"
+            app:destination="@id/taskDetailsFragment">
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/newTaskFragment"
         android:name="com.example.androidtaskapp.NewTaskFragment"
@@ -35,5 +40,6 @@
         android:id="@+id/taskDetailsFragment"
         android:name="com.example.androidtaskapp.TaskDetailsFragment"
         android:label="fragment_task_details"
-        tools:layout="@layout/fragment_task_details" />
+        tools:layout="@layout/fragment_task_details" >
+    </fragment>
 </navigation>

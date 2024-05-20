@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.scalars)
     implementation(libs.converter.moshi)
+//    implementation(libs.navigation.safe.args.gradle.plugin)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

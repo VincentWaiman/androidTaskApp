@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,8 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  */
 class TaskSelection : Fragment() {
 
-    private val allTasksExampleModels = ArrayList<TasksExample>()
-    private val tasksExampleModels = ArrayList<TasksExample>()
+    private val allTasksInfoModels = ArrayList<TaskInfo>()
+    private val tasksInfoModels = ArrayList<TaskInfo>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TasksRecyclerViewAdapter
 
@@ -35,14 +36,28 @@ class TaskSelection : Fragment() {
         val view = inflater.inflate(R.layout.fragment_task_selection, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        adapter = TasksRecyclerViewAdapter(tasksExampleModels)
+        adapter = TasksRecyclerViewAdapter(tasksInfoModels)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter.setOnItemClickListener(object : TasksRecyclerViewAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                context?.let {
-                    Toast.makeText(it, "You clicked on item No. $position", Toast.LENGTH_SHORT).show()
-                }
+                val bundle = Bundle()
+                val taskData = tasksInfoModels[position]
+
+                taskData.id?.let { bundle.putInt("id", it) }
+                bundle.putString("title", taskData.title)
+                bundle.putString("description", taskData.description)
+                bundle.putString("category", taskData.category)
+                bundle.putString("status", taskData.status)
+                bundle.putString("createdTime", taskData.createdTime)
+                bundle.putString("finishedTime", taskData.finishedTime)
+                bundle.putString("duration", taskData.duration)
+
+                val fragment = TaskDetailsFragment()
+                fragment.arguments = bundle
+                findNavController().navigate(R.id.action_taskSelection_to_taskDetailsFragment, bundle)
+
+//                Log.e("TaskSelection", "$taskData")
             }
         })
 
@@ -68,11 +83,8 @@ class TaskSelection : Fragment() {
         // Observe the tasks LiveData
         taskViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
             // Update the RecyclerView with the new task list
-            val updatedTasks = taskList.map { taskInfo ->
-                TasksExample(taskInfo.title, taskInfo.description, taskInfo.category)
-            }
-            allTasksExampleModels.clear()
-            allTasksExampleModels.addAll(updatedTasks)
+            allTasksInfoModels.clear()
+            allTasksInfoModels.addAll(taskList)
             filterTasksByCategory("0")
         }
 
@@ -84,17 +96,17 @@ class TaskSelection : Fragment() {
     }
     private fun filterTasksByCategory(category: String) {
         val filteredTasks = if (category == "All") {
-            allTasksExampleModels
+            allTasksInfoModels
         } else {
-            allTasksExampleModels.filter { it.category == category }
+            allTasksInfoModels.filter { it.category == category }
         }
         updateRecyclerView(filteredTasks)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecyclerView(filteredTasks: List<TasksExample>) {
-        tasksExampleModels.clear()
-        tasksExampleModels.addAll(filteredTasks)
+    private fun updateRecyclerView(filteredTasks: List<TaskInfo>) {
+        tasksInfoModels.clear()
+        tasksInfoModels.addAll(filteredTasks)
         adapter.notifyDataSetChanged()
     }
 
