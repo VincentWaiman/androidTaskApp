@@ -60,7 +60,7 @@ class TaskDetailsFragment : Fragment() {
         textStatus.text = getStatusText(status)
         textCreatedTime.text = createdTime.toString()
         textFinishedTime.text = finishedTime.toString()
-        textDuration.text = duration.toString()
+        textDuration.text = duration.toString() + " hour"
 
         // Show or hide buttons based on status
         when (status) {
@@ -103,7 +103,7 @@ class TaskDetailsFragment : Fragment() {
             taskViewModel.getTasks()
 
             // Show a toast message to indicate the status change
-            showToast("Task is now In Progress")
+            showToast("Task is now Done")
             requireActivity().supportFragmentManager.popBackStack()
         }
 
