@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -108,7 +109,17 @@ def edit_task_status(id):
         if new_status is None:
             return jsonify({'message': 'Status field is required!'}), 400
 
+
         task.status = new_status
+        if new_status == "2":  # Status "Done"
+            task.finishedTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            finished_time = datetime.strptime(task.finishedTime, '%Y-%m-%d %H:%M:%S')
+            created_time = datetime.strptime(task.createdTime, '%Y-%m-%d %H:%M:%S')
+
+            duration_hours = (finished_time - created_time).total_seconds() / 3600  # Duration in hours
+            task.duration = str(round(duration_hours, 2))
+
         db.session.commit()
 
         return jsonify({'message': 'Task status updated successfully!'})
