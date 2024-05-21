@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainFragment">
 
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="task"-->
+<!--            type="com.example.androidtaskapp.MainViewModel" />-->
+<!--    </data>-->
+
         <GridLayout
             android:id="@+id/gridLayout"
             android:layout_width="0dp"

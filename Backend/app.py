@@ -118,7 +118,9 @@ def edit_task_status(id):
             created_time = datetime.strptime(task.createdTime, '%Y-%m-%d %H:%M:%S')
 
             duration_hours = (finished_time - created_time).total_seconds() / 3600  # Duration in hours
-            task.duration = str(round(duration_hours, 2))
+            formatted_duration = "{:.2f}".format(duration_hours)
+
+            task.duration = str(formatted_duration)
 
         db.session.commit()
 

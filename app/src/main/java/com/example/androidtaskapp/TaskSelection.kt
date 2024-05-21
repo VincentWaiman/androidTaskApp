@@ -1,14 +1,12 @@
 package com.example.androidtaskapp
 
-import TaskViewModel
+import MainViewModel
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,10 +22,12 @@ class TaskSelection : Fragment() {
 
     private val allTasksInfoModels = ArrayList<TaskInfo>()
     private val tasksInfoModels = ArrayList<TaskInfo>()
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TasksRecyclerViewAdapter
 
-    private val taskViewModel: TaskViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,7 +81,7 @@ class TaskSelection : Fragment() {
         }
 
         // Observe the tasks LiveData
-        taskViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
+        mainViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
             // Update the RecyclerView with the new task list
             allTasksInfoModels.clear()
             allTasksInfoModels.addAll(taskList)
@@ -89,7 +89,7 @@ class TaskSelection : Fragment() {
         }
 
         // Load tasks from ViewModel
-        taskViewModel.getTasks()
+        mainViewModel.getTasks()
 
 
         return view
