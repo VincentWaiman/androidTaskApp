@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("androidx.navigation.safeargs")
+
 }
 
 android {
@@ -33,6 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -45,10 +51,15 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
+
     implementation(libs.retrofit)
     implementation(libs.converter.scalars)
     implementation(libs.converter.moshi)
 //    implementation(libs.navigation.safe.args.gradle.plugin)
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

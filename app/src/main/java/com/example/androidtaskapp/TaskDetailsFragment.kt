@@ -1,8 +1,7 @@
 package com.example.androidtaskapp
 
-import TaskViewModel
+import MainViewModel
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,7 @@ import androidx.fragment.app.viewModels
  */
 class TaskDetailsFragment : Fragment() {
 
-    private val taskViewModel: TaskViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     private var id: Int = 0
 
@@ -89,8 +88,8 @@ class TaskDetailsFragment : Fragment() {
 
         // Set onClickListener for the Start button
         btnStart.setOnClickListener {
-            taskViewModel.updateTaskStatus(this.id, "1")// Update status to "In Progress" (1)
-            taskViewModel.getTasks()
+            mainViewModel.updateTaskStatus(this.id, "1")// Update status to "In Progress" (1)
+            mainViewModel.getTasks()
 
             // Show a toast message to indicate the status change
             showToast("Task is now In Progress")
@@ -99,8 +98,8 @@ class TaskDetailsFragment : Fragment() {
 
         // Set onClickListener for the Done button
         btnDone.setOnClickListener {
-            taskViewModel.updateTaskStatus(this.id, "2")// Update status to "Done" (2)
-            taskViewModel.getTasks()
+            mainViewModel.updateTaskStatus(this.id, "2")// Update status to "Done" (2)
+            mainViewModel.getTasks()
 
             // Show a toast message to indicate the status change
             showToast("Task is now Done")
