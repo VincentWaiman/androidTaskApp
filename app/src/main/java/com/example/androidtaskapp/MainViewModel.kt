@@ -1,0 +1,87 @@
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.androidtaskapp.ApiClient.taskApiService
+import com.example.androidtaskapp.TaskInfo
+import com.example.androidtaskapp.TaskResponse
+import com.example.androidtaskapp.TaskStatusUpdate
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class MainViewModel : ViewModel() {
+
+    private val _tasks = MutableLiveData<List<TaskInfo>>()
+    val tasks: LiveData<List<TaskInfo>> get() = _tasks
+
+    private val _statusZeroCount = MutableLiveData<Int>()
+    val statusZeroCount: LiveData<Int> get() = _statusZeroCount
+
+    private val _statusOneCount = MutableLiveData<Int>()
+    val statusOneCount: LiveData<Int> get() = _statusOneCount
+
+    private val _statusTwoCount = MutableLiveData<Int>()
+    val statusTwoCount: LiveData<Int> get() = _statusTwoCount
+
+    init {
+        getTasks()
+    }
+
+    fun setTasks(taskList: List<TaskInfo>) {
+        _tasks.value = taskList
+        updateStatusCounts(taskList)
+    }
+
+    fun getTasks() {
+        val call = taskApiService.getTasks()
+
+        call.enqueue(object : Callback<TaskResponse> {
+            override fun onFailure(call: Call<TaskResponse>, t: Throwable) {
+                Log.e("MainViewModel", "Failed to get tasks", t)
+            }
+
+            override fun onResponse(call: Call<TaskResponse>, response: Response<TaskResponse>) {
+                if (response.isSuccessful) {
+                    val taskList = response.body()?.task ?: emptyList()
+                    setTasks(taskList)
+                } else {
+                    Log.e("MainViewModel", "Failed to get tasks \n ${response.errorBody()?.string() ?: ""}")
+                }
+            }
+        })
+    }
+
+    private fun updateStatusCounts(taskList: List<TaskInfo>) {
+        val statusZero = taskList.count { it.status == "0" }
+        val statusOne = taskList.count { it.status == "1" }
+        val statusTwo = taskList.count { it.status == "2" }
+
+        _statusZeroCount.value = statusZero
+        _statusOneCount.value = statusOne
+        _statusTwoCount.value = statusTwo
+
+        Log.d("MainViewModel", "Status counts updated - 0: $statusZero, 1: $statusOne, 2: $statusTwo")
+    }
+
+    fun updateTaskStatus(taskId: Int, newStatus: String) {
+        val statusUpdate = TaskStatusUpdate(newStatus)
+        val call = taskApiService.updateTaskStatus(taskId, statusUpdate)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("MainViewModel", "Failed to update task status", t)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // Refresh tasks after successful update
+                    getTasks()
+                    Log.d("MainViewModel", "Task status updated successfully")
+                } else {
+                    Log.e("MainViewModel", "Failed to update task status \n ${response.errorBody()?.string() ?: ""}")
+                }
+            }
+        })
+    }
+}
