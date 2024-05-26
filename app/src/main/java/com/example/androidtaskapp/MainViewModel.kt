@@ -76,7 +76,6 @@ class MainViewModel : ViewModel() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     // Refresh tasks after successful update
-                    getTasks()
                     Log.d("MainViewModel", "Task status updated successfully")
                 } else {
                     Log.e("MainViewModel", "Failed to update task status \n ${response.errorBody()?.string() ?: ""}")

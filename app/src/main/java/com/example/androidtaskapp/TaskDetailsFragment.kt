@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 
 /**
  * A simple [Fragment] subclass.
@@ -59,7 +60,7 @@ class TaskDetailsFragment : Fragment() {
         textStatus.text = getStatusText(status)
         textCreatedTime.text = createdTime.toString()
         textFinishedTime.text = finishedTime.toString()
-        textDuration.text = duration.toString() + " hour"
+        textDuration.text = duration.toString()
 
         // Show or hide buttons based on status
         when (status) {
@@ -89,21 +90,21 @@ class TaskDetailsFragment : Fragment() {
         // Set onClickListener for the Start button
         btnStart.setOnClickListener {
             mainViewModel.updateTaskStatus(this.id, "1")// Update status to "In Progress" (1)
-            mainViewModel.getTasks()
+//            mainViewModel.getTasks()
 
             // Show a toast message to indicate the status change
             showToast("Task is now In Progress")
-            requireActivity().supportFragmentManager.popBackStack()
+            view.findNavController().navigate(R.id.mainFragment)
         }
 
         // Set onClickListener for the Done button
         btnDone.setOnClickListener {
             mainViewModel.updateTaskStatus(this.id, "2")// Update status to "Done" (2)
-            mainViewModel.getTasks()
+//            mainViewModel.getTasks()
 
             // Show a toast message to indicate the status change
             showToast("Task is now Done")
-            requireActivity().supportFragmentManager.popBackStack()
+            view.findNavController().navigate(R.id.mainFragment)
         }
 
         return view
