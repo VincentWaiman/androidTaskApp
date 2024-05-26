@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime
+import pytz
 
 db = SQLAlchemy()
 
@@ -14,7 +15,7 @@ class Task(db.Model):
     status = db.Column(db.String(20))
     createdTime = db.Column(db.String(30))
     finishedTime = db.Column(db.String(30))
-    duration = db.Column(db.Integer) 
+    duration = db.Column(db.String(100))
 
     def __repr__(self):
         return f'<Task {self.title}>'
@@ -112,13 +113,23 @@ def edit_task_status(id):
 
         task.status = new_status
         if new_status == "2":  # Status "Done"
-            task.finishedTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            utc_plus_7 = pytz.timezone('Asia/Bangkok')
+            now_utc = datetime.now(pytz.utc)
+            now_utc_plus_7 = now_utc.astimezone(utc_plus_7)
+            task.finishedTime = now_utc_plus_7.strftime('%Y-%m-%d %H:%M:%S')
 
             finished_time = datetime.strptime(task.finishedTime, '%Y-%m-%d %H:%M:%S')
             created_time = datetime.strptime(task.createdTime, '%Y-%m-%d %H:%M:%S')
 
-            duration_hours = (finished_time - created_time).total_seconds() / 3600  # Duration in hours
-            formatted_duration = "{:.2f}".format(duration_hours)
+            duration_seconds = (finished_time - created_time).total_seconds()
+            days = int(duration_seconds // (24 * 3600))
+            duration_seconds %= (24 * 3600)
+            hours = int(duration_seconds // 3600)
+            duration_seconds %= 3600
+            minutes = int(duration_seconds // 60)
+            seconds = int(duration_seconds % 60)
+
+            formatted_duration = f"{days:02}:{hours:02}:{minutes:02}:{seconds:02}"
 
             task.duration = str(formatted_duration)
 
